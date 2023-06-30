@@ -1,0 +1,81 @@
+Task 1:
+
+SELECT d.DEPT_NAME, AVG(e.SALARY) AS AVG_MONTHLY_SALARY
+FROM DEPARTMENT d
+JOIN EMPLOYEE e ON d.DEPT_ID = e.DEPT_ID
+GROUP BY d.DEPT_NAME
+ORDER BY AVG_MONTHLY_SALARY DESC
+LIMIT 3;
+
+
+Task 2: 
+
+import csv
+
+def generate_report():
+    # Read CSV files and calculate average monthly salary for each department
+    departments = {}
+    for file_name in ['worksheet1.csv', 'worksheet2.csv', 'worksheet3.csv']:
+        with open(file_name, 'r') as csv_file:
+            reader = csv.DictReader(csv_file)
+            for row in reader:
+                department_name = row['DEPARTMENT_NAME']
+                monthly_salary = float(row['MONTHLY_SALARY'])
+                if department_name in departments:
+                    departments[department_name]['total_salary'] += monthly_salary
+                    departments[department_name]['employee_count'] += 1
+                else:
+                    departments[department_name] = {'total_salary': monthly_salary, 'employee_count': 1}
+    
+    # Calculate average monthly salary for each department
+    department_averages = []
+    for department, data in departments.items():
+        average_salary = data['total_salary'] / data['employee_count']
+        department_averages.append({'DEPT_NAME': department, 'AVG_MONTHLY_SALARY': average_salary})
+    
+    # Sort departments by average monthly salary in descending order
+    department_averages.sort(key=lambda x: x['AVG_MONTHLY_SALARY'], reverse=True)
+    
+    # Fetch top 3 departments
+    top_departments = department_averages[:3]
+    
+    # Generate report
+    print("DEPT_NAME\t\tAVG_MONTHLY_SALARY (USD)")
+    for department in top_departments:
+        print(f"{department['DEPT_NAME']}\t\t{department['AVG_MONTHLY_SALARY']:.2f}")
+
+# Run the script
+generate_report()
+
+
+Task 3:
+
+def compute(n):
+    if n < 10:
+        out = n ** 2
+    elif n < 20:
+        out = 1
+        for i in range(1, n - 10 + 1):
+            out *= i
+    else:
+        lim = n - 20
+        out = lim * lim
+        out -= lim
+        out //= 2
+    print(out)
+
+n = int(input("Enter an integer: "))
+compute(n)
+
+
+
+Task 4:
+
+grep '^Xerox' sample.tsv | awk '{ print $1 "\t" NR }' | sort -k1,1 > output.tsv && cat output.tsv | tee >(wc -l) | tee >(sha1sum) | tail -5
+
+
+
+Taks 5:
+
+find . -maxdepth 1 -type f -printf "%u\n" | xargs -I{} id -nG {} | tr ' ' ','
+
